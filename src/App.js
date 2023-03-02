@@ -68,7 +68,21 @@ function reducer(state, { type, payload }) {
     case ACTIONS.CLEAR:
       return {};
     case ACTIONS.DELETE_DIGIT:
-      break;
+      if (state.overwrite) {
+        return {
+          ...state,
+          overwrite: false,
+          currentOperand: null,
+        }        
+      }
+      if (state.currentOperand == null) return state
+      if (state.currentOperand.length === 1) {
+        return { ...state, currentOperand: null }
+      }
+      return{
+        ...state,
+        currentOperand: state.currentOperand.slice(0, -1)
+      };
     case ACTIONS.EVALUATE:
       // We don't have all the information that we need
       if (state.operation == null || state.currentOperand == null || state.previewOperand == null) {
@@ -81,7 +95,6 @@ function reducer(state, { type, payload }) {
         operation: null,
         currentOperand: evaluate(state)
       }
-
     default:
       break;
   }
