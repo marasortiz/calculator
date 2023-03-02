@@ -1,0 +1,42 @@
+/* Palette
+#ffcdb2
+#ffb4a2
+#e5989b
+#b5838d
+#6d6875 */
+
+/* Select all */
+*, *::before, *::after{
+    box-sizing: border-box;
+} 
+
+body{
+    margin: 0;
+    background: linear-gradient(to right, #ffcdb2, #e5989b);
+}
+
+/* Styles created */
+.calculator-grid{
+    display: grid;
+    margin-top: 2rem;
+    grid-template-columns: repeat(4, 6rem);
+    grid-template-rows: minmax(7rem, auto) repeat(5, 6rem);
+}
+
+.span-two{
+    grid-column: span 2;
+}
+
+.output{
+    grid-column: 1 / -1;
+    background-color: rgba(0, 0, 0, .75);
+    display: flex;
+}
+
+.previous-operand{
+
+}
+
+.current-operand{
+
+}
