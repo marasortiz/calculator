@@ -14,6 +14,14 @@ export const ACTIONS = {
 function reducer(state, { type, payload }) {
   switch (type) {
     case ACTIONS.ADD_DIGIT:
+      // When we have a result, the new number overwrite the result, but no the operand
+      if (state.overwrite) {
+        return{
+          ...state,
+          currentOperand: payload.digit,
+          overwrite:false
+        }
+      }
       // Limit the '0' so that only one number is displayed (1st number)
       if (payload.digit === "0" && state.currentOperand === "0") {
         return state
@@ -62,7 +70,17 @@ function reducer(state, { type, payload }) {
     case ACTIONS.DELETE_DIGIT:
       break;
     case ACTIONS.EVALUATE:
-      break;
+      // We don't have all the information that we need
+      if (state.operation == null || state.currentOperand == null || state.previewOperand == null) {
+        return state
+      }
+      return{
+        ...state,
+        overwrite: true,
+        previewOperand: null,
+        operation: null,
+        currentOperand: evaluate(state)
+      }
 
     default:
       break;
@@ -110,7 +128,12 @@ function App() {
         </div>
         <div className="current-operand">{currentOperand}</div>
       </div>
-      <button className="span-two" onClick={() => dispatch({ type: ACTIONS.CLEAR })}>AC</button>
+      <button
+        className="span-two"
+        onClick={() => dispatch({ type: ACTIONS.CLEAR })}
+      >
+        AC
+      </button>
       <button>DEL</button>
       <OperationButton operation="÷" dispatch={dispatch} />
       <DigitButton digit="1" dispatch={dispatch} />
@@ -127,8 +150,12 @@ function App() {
       <OperationButton operation="-" dispatch={dispatch} />
       <DigitButton digit="." dispatch={dispatch} />
       <DigitButton digit="0" dispatch={dispatch} />
-      <OperationButton operation="=" dispatch={dispatch} className="span-two" />
-      {/* <button className="span-two">=</button> */}
+      <button
+        className="span-two"
+        onClick={() => dispatch({ type: ACTIONS.EVALUATE })}
+      >
+        =
+      </button>
     </div>
   );
 }
